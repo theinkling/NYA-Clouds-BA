@@ -1126,111 +1126,111 @@ cloudnetDataDensityThreshold = 105
 
 
 # Create radiosonde models plot
-# plotRSModels()
+plotRSModels()
 
 # Create histogram of radiosonde ascents
-# plotRSTimelines()
+plotRSTimelines()
 
 # Create plots for radiosonde ascent times and durations
-# RSData = readRadiosondeData(
-#     datetime.date(1993, 1, 1),
-#     datetime.date(2022, 12, 31),
-#     preprocessData=True,
-#     onlyMiddayAscents=False,
-# )
-# plotRadiosondeAscentTimes(RSData, vlines=[10, 12])
+RSData = readRadiosondeData(
+    datetime.date(1993, 1, 1),
+    datetime.date(2022, 12, 31),
+    preprocessData=True,
+    onlyMiddayAscents=False,
+)
+plotRadiosondeAscentTimes(RSData, vlines=[10, 12])
 
 # Plot drift of radiosondes
-# plotLatLon(RSData, "LatLon")
-# plotLatLonDistribution(RSData)
+plotLatLon(RSData, "LatLon")
+plotLatLonDistribution(RSData)
 
 # Plot CN data availability
-# plotCNDataAvailability()
+plotCNDataAvailability()
 
 # Compute Zhang algorithm for RS data
-# RSData = readRadiosondeData(
-#     datetime.date(2016, 6, 10),
-#     datetime.date(2022, 12, 31),
-#     preprocessData=True,
-#     onlyMiddayAscents=False,
-# )
-# ZHData = callZH10(RSData, shift=0)
+RSData = readRadiosondeData(
+    datetime.date(2016, 6, 10),
+    datetime.date(2022, 12, 31),
+    preprocessData=True,
+    onlyMiddayAscents=False,
+)
+ZHData = callZH10(RSData, shift=0)
 
 # Compute CN data density for RS ascents
-# cloudnetCBTHs = readCloudnetData(
-#     datetime.date(2016, 6, 10),
-#     datetime.date(2022, 12, 31),
-#     below10KmOnly=True,
-#     returnCBTHOnly=True,
-# )
-# cloudnetCBTHs.to_csv("../Data/c.csv")
-# cloudnetCBTHs = pd.read_csv("../Data/c.csv")
-# cloudnetCBTHs["time"] = pd.to_datetime(
-#     cloudnetCBTHs["time"], format="%Y-%m-%d %H:%M:%S.%f"
-# )
-# cloudnetCBTHs.set_index("time", inplace=True)
+cloudnetCBTHs = readCloudnetData(
+    datetime.date(2016, 6, 10),
+    datetime.date(2022, 12, 31),
+    below10KmOnly=True,
+    returnCBTHOnly=True,
+)
+cloudnetCBTHs.to_csv("../Data/c.csv")
+cloudnetCBTHs = pd.read_csv("../Data/c.csv")
+cloudnetCBTHs["time"] = pd.to_datetime(
+    cloudnetCBTHs["time"], format="%Y-%m-%d %H:%M:%S.%f"
+)
+cloudnetCBTHs.set_index("time", inplace=True)
 
-# plotCloudnetDataDensity(
-#     createAnalysisDf(ZHData, cloudnetCBTHs, removeArtefact=False),
-#     cloudnetDataDensityThreshold,
-# )
+plotCloudnetDataDensity(
+    createAnalysisDf(ZHData, cloudnetCBTHs, removeArtefact=False),
+    cloudnetDataDensityThreshold,
+)
 
 # Compute Skill Scores and contingency tables for cloud detection
-# analysisData = createAnalysisDf(ZHData, cloudnetCBTHs, removeArtefact=False)
-# cT0 = createContingencyTableAndSkillScores(analysisData, cloudnetDataDensityThreshold)
-# print("Contingency table and Skill Scores for unshifted ZhA:")
-# print(cT0)
+analysisData = createAnalysisDf(ZHData, cloudnetCBTHs, removeArtefact=False)
+cT0 = createContingencyTableAndSkillScores(analysisData, cloudnetDataDensityThreshold)
+print("Contingency table and Skill Scores for unshifted ZhA:")
+print(cT0)
 
 # Create sensitivity plots
-# contingencyTables = zhangSensitivityAnalysis(
-#     datetime.date(2016, 6, 10),
-#     datetime.date(2022, 12, 31),
-#     ZHData,
-#     RSData,
-#     cloudnetCBTHs,
-#     np.arange(-20, 20, 1),
-#     cloudnetDataDensityThreshold,
-#     saveData=True,
-# )
-# with open("contingencyTables.json", "r") as file:
-#     contingencyTables = json.load(file)
-# plotSkillScores(contingencyTables)
+contingencyTables = zhangSensitivityAnalysis(
+    datetime.date(2016, 6, 10),
+    datetime.date(2022, 12, 31),
+    ZHData,
+    RSData,
+    cloudnetCBTHs,
+    np.arange(-20, 20, 1),
+    cloudnetDataDensityThreshold,
+    saveData=True,
+)
+with open("contingencyTables.json", "r") as file:
+    contingencyTables = json.load(file)
+plotSkillScores(contingencyTables)
 
 # Compute Skill Scores and contingency tables for cloud detection with shifted ZhA
-# analysisData7 = createAnalysisDf(
-#     callZH10(RSData, shift=7), cloudnetCBTHs, removeArtefact=False
-# )
-# cT7 = createContingencyTableAndSkillScores(analysisData7, cloudnetDataDensityThreshold)
-# print("Contingency table and Skill Scores for shifted ZhA:")
-# print(cT7)
+analysisData7 = createAnalysisDf(
+    callZH10(RSData, shift=7), cloudnetCBTHs, removeArtefact=False
+)
+cT7 = createContingencyTableAndSkillScores(analysisData7, cloudnetDataDensityThreshold)
+print("Contingency table and Skill Scores for shifted ZhA:")
+print(cT7)
 
 # Plot correlations
-# analysisData0A = createAnalysisDf(
-#     callZH10(RSData, shift=0), cloudnetCBTHs, removeArtefact=True
-# )
-# analysisData7A = createAnalysisDf(
-#     callZH10(RSData, shift=7), cloudnetCBTHs, removeArtefact=True
-# )
-# plotCorrelations(analysisData, cbhFileName="cbhC", cthFileName="cthC")
-# plotCorrelations(analysisData7, cbhFileName="cbhC7", cthFileName="cthC7")
-# plotCorrelations(analysisData0A, cbhFileName="cbhC0A", cthFileName="cthC0A")
-# plotCorrelations(analysisData7A, cbhFileName="cbhC7A", cthFileName="cthC7A")
+analysisData0A = createAnalysisDf(
+    callZH10(RSData, shift=0), cloudnetCBTHs, removeArtefact=True
+)
+analysisData7A = createAnalysisDf(
+    callZH10(RSData, shift=7), cloudnetCBTHs, removeArtefact=True
+)
+plotCorrelations(analysisData, cbhFileName="cbhC", cthFileName="cthC")
+plotCorrelations(analysisData7, cbhFileName="cbhC7", cthFileName="cthC7")
+plotCorrelations(analysisData0A, cbhFileName="cbhC0A", cthFileName="cthC0A")
+plotCorrelations(analysisData7A, cbhFileName="cbhC7A", cthFileName="cthC7A")
 
 
 # Print Correlation parameters
-# for aD, name in zip(
-#     [analysisData, analysisData0A, analysisData7, analysisData7A],
-#     ["0", "0A", "7", "7A"],
-# ):
-#     correlationCoefficients = calculateCorrelation(aD)
-#     print(name)
-#     for i in range(0, len(correlationCoefficients)):
-#         print(
-#             list(correlationCoefficients.keys())[i]
-#             + ":\t"
-#             + str(list(correlationCoefficients.values())[i])
-#         )
-#         print()
+for aD, name in zip(
+    [analysisData, analysisData0A, analysisData7, analysisData7A],
+    ["0", "0A", "7", "7A"],
+):
+    correlationCoefficients = calculateCorrelation(aD)
+    print(name)
+    for i in range(0, len(correlationCoefficients)):
+        print(
+            list(correlationCoefficients.keys())[i]
+            + ":\t"
+            + str(list(correlationCoefficients.values())[i])
+        )
+        print()
 
 
 # --------------    Create Radiosonde Ascent Plots and Cloudnet Plots   --------------------
